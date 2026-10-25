@@ -21,11 +21,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Get-Smithbox.ps1
 
 ## 安装与首次配置
 
-1. 将发布 ZIP 解压到自己可写的独立目录，运行 `Nightreign-Configurator.exe`。
-2. 向导尝试读取 Steam 安装位置和库目录；检测不到时手动选择 `nightreign.exe`。
-3. 选择已安装的 `nrsc.dll`、`me3.exe` 和基于 .NET 10 的 `pwsh.exe`。带 Smithbox 组件的版本会自动选择 `vendor/smithbox`，无需另装 Smithbox；轻量版需手动选择包含 `Andre.SoulsFormats.dll` 和 Nightreign 参数定义的 Smithbox 文件夹。
-4. 点击“验证并保存”。程序从游戏目录复制原始参数到自己的 `data/baseline`，不会覆盖游戏目录中的 regulation.bin。
-5. 选择选项，点击“确定并生成”，然后点击“启动无缝”。Steam 需已运行。修改参数前需退出游戏和 Smithbox。
+1. 下载 `Nightreign-Configurator-v0.1.0-preview-win-x64.zip`，完整解压到可写的独立目录，不要放进游戏目录。
+2. 双击 **一键配置.cmd**。首次联网从官方 GitHub 下载 PowerShell 7.6.8、ME3 0.13.0、Smithbox 2.2.6（合计约 392 MiB），校验 SHA-256 后解压到本地 vendor；无需安装系统级依赖。
+3. 向导自动检测 Steam 游戏和无缝 DLL；核对路径后点击“验证并保存”。游戏和无缝联机需事先安装，无缝密码沿用现有 INI。依赖路径会自动填写。
+4. 选择夜王、地形、Map pattern，点击“确定并生成”，然后关闭配置器。
+5. 登录 Steam，双击 **启动游戏.cmd**。ME3 加载最近生成的 regulation.bin；开启固定 Map 时自动打开锁定器，进入圆桌厅后手动应用。未开启固定 Map 时不打开锁定器。
+
+修改选择时直接运行 `Nightreign-Configurator.exe`。移动目录后重新运行一键配置并重新生成。启动失败会保留 CMD 错误信息。已安装依赖会复用，日常启动不重新下载；源码使用者仍可通过下方手动依赖方式构建。
 
 全不选夜王保留原版权重；夜王多选可选等概率或原版权重。全不选地形保留原版随机；地形多选保留原始相对权重。
 
@@ -33,13 +35,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Get-Smithbox.ps1
 
 沿用所选 DLL 旁的 `nrsc_settings.ini`。“无缝设置”直接用记事本打开该文件；程序不解析、复制或导出密码。队伍成员仍需自行约定相同的联机设置。
 
-“启动无缝”通过 ME3 外部加载本次生成的参数和现有无缝 DLL，动态生成本地 profile；不调用另一个无缝 launcher。请使用这个入口启动，其他入口不保证加载相同参数。ME3、无缝和 PowerShell 需用户自行安装。可选包包含 Smithbox 参数组件，不包含完整 Smithbox 编辑器。
+“启动无缝”通过 ME3 外部加载本次生成的参数和现有无缝 DLL，动态生成本地 profile；不调用另一个无缝 launcher。请使用这个入口启动，其他入口不保证加载相同参数。便携版会自动获取 ME3、PowerShell 和完整 Smithbox；无缝联机需用户自行安装。
 
 本机绝对路径仅保存在 `data/config.json`。换电脑后运行“环境设置”重新选择路径。不要共享整个已使用过的程序文件夹；分享软件使用干净发布 ZIP。
 
 ## 实验性固定模板
 
-填写 Map pattern 编号并生成参数，启动后在圆桌厅打开“房主控制器”手动应用，仅由房主操作。固定模板会选择相应夜王和地形，不固定首圈、掉落或全部随机事件。
+填写 Map pattern 编号并生成参数，启动时会自动打开“房主控制器”，进入圆桌厅后手动应用，仅由房主操作。固定模板会选择相应夜王和地形，不固定首圈、掉落或全部随机事件。
 
 控制器保留原版布局，在已验证的游戏指令处选择实际模板。单人读回验证曾通过；**房主单独修改后，队友地图同步尚未完成多人验收**。请勿把它宣传为已验证的联机同步功能。游戏更新、指令不匹配、未加载无缝、生成后未重启、目标不在候选列表时均不应强制应用。
 

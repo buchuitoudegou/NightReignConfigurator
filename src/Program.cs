@@ -33,7 +33,7 @@ class Configurator : Form {
  readonly string[] terrains={"原版随机（不固定）","雪山 · Mountaintop","火山 · The Crater","腐败 · Rotted Woods","大空洞 · Great Hollow","隐城 · Shrouded City"};
  [STAThread] static void Main(string[] args){
   Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);
-  try{if(!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data","config.json"))){using(var setup=new SetupDialog()){if(setup.ShowDialog()!=DialogResult.OK)return;}}Application.Run(new Configurator(args));}catch(Exception e){MessageBox.Show(e.Message,"启动失败",MessageBoxButtons.OK,MessageBoxIcon.Error);}
+  try{if(args.Contains("--configure")||!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data","config.json"))){using(var setup=new SetupDialog()){if(setup.ShowDialog()!=DialogResult.OK)return;}}Application.Run(new Configurator(args));}catch(Exception e){MessageBox.Show(e.Message,"启动失败",MessageBoxButtons.OK,MessageBoxIcon.Error);}
  }
  Label TextLabel(string text,int x,int y,int w,int h,float size,bool bold){
   Label l=new Label{Text=text,Location=new Point(x,y),Size=new Size(w,h),Font=new Font("Microsoft YaHei UI",size,bold?FontStyle.Bold:FontStyle.Regular),ForeColor=Color.FromArgb(35,44,59)};return l;

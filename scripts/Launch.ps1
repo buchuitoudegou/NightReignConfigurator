@@ -6,8 +6,11 @@ try {
  $cfg=Get-Content -LiteralPath (Join-Path $data 'config.json') -Raw | ConvertFrom-Json
  if(Get-Process -Name nightreign,nrsc_launcher -ErrorAction SilentlyContinue){throw '请先退出游戏，再从此入口启动。'}
  $source=$cfg.Output
+ $lockPattern=$false
  $selection=Join-Path $data 'host-selection.json'
- if(Test-Path -LiteralPath $selection){$selected=Get-Content -LiteralPath $selection -Raw | ConvertFrom-Json;$source=$selected.Output;if((Get-FileHash -LiteralPath $source).Hash -ne $selected.Hash){throw '生成文件已变化，请重新生成。'}}
+ if(Test-Path -LiteralPath $selection){$selected=Get-Content -LiteralPath $selection -Raw | ConvertFrom-Json;$source=$selected.Output;$lockPattern=($null -ne $selected.PatternId);if((Get-FileHash -LiteralPath $source).Hash -ne $selected.Hash){throw '生成文件已变化，请重新生成。'}}
+ $controller=Join-Path $PSScriptRoot 'Host-Pattern-Controller.exe'
+ if($lockPattern -and -not (Test-Path -LiteralPath $controller -PathType Leaf)){throw '缺少房主锁定器，请重新解压完整程序包。'}
  foreach($file in @($cfg.GameExe,$cfg.Me3,$cfg.SeamlessDll,$cfg.SeamlessIni,$source)){if(-not (Test-Path -LiteralPath $file -PathType Leaf)){throw "缺少启动文件：$file"}}
  if((Get-FileHash -LiteralPath $cfg.GameRegulation).Hash -ne $cfg.BaselineHash){throw '游戏原始参数已变化，请重新核对版本。'}
  $runtime=Join-Path $data 'runtime'
@@ -36,8 +39,9 @@ load_early = true
 optional = false
 enabled = true
 "@ | Set-Content -LiteralPath $profile -Encoding utf8NoBOM
- if($CheckOnly){@{Success=$true;CheckOnly=$true;StagedHash=(Get-FileHash -LiteralPath $staged).Hash} | ConvertTo-Json -Compress;exit 0}
+ if($CheckOnly){@{Success=$true;CheckOnly=$true;WillStartController=$lockPattern;StagedHash=(Get-FileHash -LiteralPath $staged).Hash} | ConvertTo-Json -Compress;exit 0}
  if(-not (Get-Process -Name steam -ErrorAction SilentlyContinue)){throw '请先启动 Steam 并登录。'}
+ if($lockPattern){Start-Process -FilePath $controller -WorkingDirectory $PSScriptRoot | Out-Null;Write-Output '锁定器已打开。进入圆桌厅后，请在锁定器中应用房主锁定。'}
  Push-Location (Split-Path $cfg.GameExe)
  try{& $cfg.Me3 launch --game nightreign --exe $cfg.GameExe --profile $profile --online false;if($LASTEXITCODE -ne 0){throw "ME3 启动失败，退出码 $LASTEXITCODE"}}finally{Pop-Location}
  if((Get-FileHash -LiteralPath $cfg.GameRegulation).Hash -ne $cfg.BaselineHash){throw '启动后原始文件校验不一致，请检查其他工具。'}

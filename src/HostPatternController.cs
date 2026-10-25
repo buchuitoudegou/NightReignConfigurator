@@ -74,5 +74,5 @@ class HostPatternController:Form{
  label.Text="房主目标模板："+target+"\n本局模板："+pattern+"   远征种子候选值："+seed+"\n选取命中："+hit+"   不在候选池："+miss+"\n"+(pattern<0?"圆桌厅待出击。":"请核对本局地图；队友一致性仍需实测。");
  string key=game.Id+":"+pattern+":"+seed;if(pattern>=0&&key!=last){Directory.CreateDirectory(Path.Combine(home,"history"));File.AppendAllText(Path.Combine(home,"history","host-patterns.jsonl"),json.Serialize(new{TimeUtc=DateTime.UtcNow.ToString("o"),PatternId=pattern,SeedCandidate=seed,Target=target,Hits=hit,Misses=miss})+Environment.NewLine);last=key;}
  }catch(Exception ex){label.Text="读取状态失败："+ex.Message;}}
- [STAThread]static void Main(string[] args){if(args.Length==1&&args[0]=="--dump-test-code"){File.WriteAllBytes("host-code-test.bin",Build(0x180000000,0x143c13258,0x1406aeef3,88));return;}Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new HostPatternController());}
+ [STAThread]static void Main(string[] args){if(args.Length==1&&args[0]=="--dump-test-code"){File.WriteAllBytes("host-code-test.bin",Build(0x180000000,0x143c13258,0x1406aeef3,88));return;}bool first;using(var single=new System.Threading.Mutex(true,"Local\\NightreignHostPatternController",out first)){if(!first)return;Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new HostPatternController());}}
 }

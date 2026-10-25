@@ -21,6 +21,8 @@
 
 ## 其他依赖
 
+便携版 `Bootstrap.ps1` 使用 `dependencies.json` 中的官方固定 ZIP 地址和 SHA-256，首次配置时直接下载，不在配置器 ZIP 中重新分发第三方二进制。完整保留上游随包许可证。PowerShell 7.6.8 来源：https://github.com/PowerShell/PowerShell/releases/tag/v7.6.8 ；ME3 0.13.0 来源：https://github.com/garyttierney/me3/releases/tag/v0.13.0 。下载来源、版本、校验值和源码链接均记录在依赖清单。
+
 配置器使用 Windows/.NET Framework、基于 .NET 10 的 PowerShell、ME3，以及用户自行安装的 Nightreign Seamless Co-op。游戏参数、EXE、存档、无缝密码和无缝 DLL 均不在源码仓库中。地图模板列表在首次配置时从用户本机游戏参数提取。
 
 本项目自身尚未指定开源许可证；第三方许可证仅适用于相应第三方内容。

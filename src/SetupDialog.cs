@@ -20,7 +20,7 @@ class SetupDialog : Form {
   Font=new Font("Microsoft YaHei UI",9);AutoScaleMode=AutoScaleMode.Dpi;
   var layout=new TableLayoutPanel{Dock=DockStyle.Fill,Padding=new Padding(18),ColumnCount=3,RowCount=8};
   layout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,125));layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));layout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,80));Controls.Add(layout);
-  var help=new Label{Text="选择已安装的依赖；不会下载或打包游戏及无缝文件。\nPowerShell 需要 .NET 10 运行时（建议 PowerShell 7.6）。",Dock=DockStyle.Fill};layout.Controls.Add(help,0,0);layout.SetColumnSpan(help,3);layout.RowStyles.Add(new RowStyle(SizeType.Absolute,60));
+  var help=new Label{Text="一键配置已准备运行依赖，请核对游戏与无缝 DLL 路径。\n找不到依赖时，请先双击“一键配置.cmd”；首次配置需要联网。",Dock=DockStyle.Fill};layout.Controls.Add(help,0,0);layout.SetColumnSpan(help,3);layout.RowStyles.Add(new RowStyle(SizeType.Absolute,60));
   string[] keys={"GameExe","SeamlessDll","Me3","Smithbox","PowerShell"};
   string[] labels={"游戏 nightreign.exe","无缝 nrsc.dll","ME3 me3.exe","Smithbox 组件目录","PowerShell pwsh.exe"};
   Dictionary<string,object> old=null;string cfg=Path.Combine(home,"data","config.json");if(File.Exists(cfg))old=json.Deserialize<Dictionary<string,object>>(File.ReadAllText(cfg));
@@ -41,6 +41,11 @@ class SetupDialog : Form {
   if(old==null)Detect();
   string bundled=Path.Combine(home,"vendor","smithbox");
   if((old==null||!Directory.Exists(fields["Smithbox"].Text))&&File.Exists(Path.Combine(bundled,"Andre.SoulsFormats.dll")))fields["Smithbox"].Text=bundled;
+  foreach(string key in new[]{"PowerShell","Me3","Smithbox"}){
+   string dir=Path.Combine(home,"vendor",key=="PowerShell"?"powershell":key=="Me3"?"me3":"smithbox");
+   string marker=Path.Combine(dir,".entry-path");
+   if(File.Exists(marker)){string entry=Path.Combine(dir,File.ReadAllText(marker).Trim());if(File.Exists(entry))fields[key].Text=key=="Smithbox"?Path.GetDirectoryName(entry):entry;}
+  }
  }
  void Detect(){
   string steam=Convert.ToString(Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam","SteamPath",null));

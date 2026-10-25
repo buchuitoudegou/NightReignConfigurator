@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "powershell",
+    "Version": "7.6.8",
+    "Url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.8/PowerShell-7.6.8-win-x64.zip",
+    "Sha256": "B9F074F923C499B51EC99D313DA8E9AE90D17A9F3ADF00C73D6189F34D908528",
+    "Entry": "pwsh.exe",
+    "Source": "https://github.com/PowerShell/PowerShell/tree/v7.6.8"
+  },
+  {
+    "Id": "me3",
+    "Version": "0.13.0",
+    "Url": "https://github.com/garyttierney/me3/releases/download/v0.13.0/me3-windows-amd64.zip",
+    "Sha256": "A8B693C574106F20532AB1E8B58B2452F37370679B938A884FE75F87F9B68C2B",
+    "Entry": "me3.exe",
+    "Source": "https://github.com/garyttierney/me3/tree/v0.13.0"
+  },
+  {
+    "Id": "smithbox",
+    "Version": "2.2.6",
+    "Url": "https://github.com/vawser/Smithbox/releases/download/2.2.6/Smithbox_2_2_6_2026_09_20_b.zip",
+    "Sha256": "9A147C319DCCAD4B6DD2A5ADCC6F2BA3A5C11C40B079520C05260CB19994B3D7",
+    "Entry": "Andre.SoulsFormats.dll",
+    "Source": "https://github.com/vawser/Smithbox/tree/2.2.6"
+  }
+]
