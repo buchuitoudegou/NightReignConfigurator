@@ -4,8 +4,8 @@
 
 ## 1. 下载与配置
 
-1. **[下载便携版 ZIP](https://github.com/buchuitoudegou/NightReignConfigurator/releases/download/v0.1.0-preview/Nightreign-Configurator-v0.1.0-preview-win-x64.zip)**，完整解压到独立文件夹，不要放进游戏目录。其他版本见 [Releases](https://github.com/buchuitoudegou/NightReignConfigurator/releases)。
-2. 先安装游戏与无缝联机，再双击 **一键配置.cmd**。首次需联网，程序会自动下载 PowerShell、ME3 和 Smithbox（约 392 MiB）。
+1. **[下载便携版 ZIP](https://github.com/buchuitoudegou/NightReignConfigurator/releases/download/v0.1.1-preview/Nightreign-Configurator-v0.1.1-preview-win-x64.zip)**，完整解压到独立文件夹，不要放进游戏目录。其他版本见 [Releases](https://github.com/buchuitoudegou/NightReignConfigurator/releases)。
+2. 先安装游戏与无缝联机，再双击 **一键配置.cmd**。首次需联网，程序会自动下载 PowerShell、ME3 和 Smithbox（约 392 MiB），显示下载进度、实时速度和预计剩余时间。
 3. 核对自动检测到的路径，点击 **验证并保存**。如果没有检测到，请手动选择：
    - **游戏**：Steam 游戏目录下的 `Game/nightreign.exe`。
    - **无缝 DLL**：无缝安装目录中的 `nrsc.dll`，旁边应有 `nrsc_settings.ini`。

@@ -2,6 +2,7 @@ param([ValidateSet('Configure','Launch','Dependencies')][string]$Action='Configu
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 $ProgressPreference='SilentlyContinue'
+. (Join-Path $PSScriptRoot 'Download.ps1')
 $mutex=$null;$locked=$false
 try {
  $homeDir=$PSScriptRoot
@@ -13,13 +14,15 @@ try {
  if(-not $locked){throw 'Another setup or launcher is running. Please use one window at a time.'}
  [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
  $deps=Get-Content -LiteralPath (Join-Path $homeDir 'dependencies.json') -Raw | ConvertFrom-Json
+ $dependencyIndex=0
  foreach($dep in $deps){
+  $dependencyIndex++
   $target=Join-Path $vendor $dep.Id
   $marker=Join-Path $target '.download-sha256'
   $entryMarker=Join-Path $target '.entry-path'
   if((Test-Path -LiteralPath $entryMarker) -and (Test-Path -LiteralPath $marker) -and ((Get-Content -LiteralPath $marker -Raw).Trim() -eq $dep.Sha256)){
    $installed=Join-Path $target ((Get-Content -LiteralPath $entryMarker -Raw).Trim())
-   if(Test-Path -LiteralPath $installed -PathType Leaf){continue}
+   if(Test-Path -LiteralPath $installed -PathType Leaf){Write-Host "[$dependencyIndex/$($deps.Count)] $($dep.Id): already installed";continue}
   }
   if(Test-Path -LiteralPath $target){throw "Unmanaged or incomplete dependency folder: $target. Move it aside, then run setup again."}
   [void][IO.Directory]::CreateDirectory($vendor)
@@ -28,9 +31,11 @@ try {
   try {
    $zip=Join-Path $work 'download.zip'
    Write-Output ("Downloading {0} {1} from official GitHub..." -f $dep.Id,$dep.Version)
-   Invoke-WebRequest -Uri $dep.Url -OutFile $zip -UseBasicParsing
+   Invoke-DownloadWithProgress -Uri $dep.Url -OutFile $zip -Label "[$dependencyIndex/$($deps.Count)] $($dep.Id) $($dep.Version)"
+   Write-Host 'Verifying SHA-256...'
    if((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash -ne $dep.Sha256){throw "Checksum mismatch: $($dep.Id). Nothing installed."}
    $extract=Join-Path $work 'extracted'
+   Write-Host 'Extracting archive, please wait...'
    Expand-Archive -LiteralPath $zip -DestinationPath $extract
    $entry=@(Get-ChildItem -LiteralPath $extract -Filter $dep.Entry -File -Recurse)
    if($entry.Count -ne 1){throw "Unexpected archive layout: $($dep.Id)"}

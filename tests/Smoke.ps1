@@ -37,5 +37,5 @@ if($LASTEXITCODE -eq 0){throw 'Game file protection failed'}
 if((Get-FileHash -LiteralPath $cfg.GameRegulation).Hash -ne $cfg.BaselineHash){throw 'Game file changed'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $root 'dist\Nightreign-Configurator-preview.zip'))
-try{if($zip.Entries.Count -ne 15 -or @($zip.Entries | Where-Object {$_.FullName -match '(?i)(data/|\.bin$|\.ini$|\.dll$|config\.json)'}).Count){throw 'Package inventory failed'}}finally{$zip.Dispose()}
+try{if($zip.Entries.Count -ne 16 -or @($zip.Entries | Where-Object {$_.FullName -match '(?i)(data/|\.bin$|\.ini$|\.dll$|config\.json)'}).Count){throw 'Package inventory failed'}}finally{$zip.Dispose()}
 Write-Output "PASS: setup, 520 patterns, exact vanilla restore, template 88 validated generation, launch preparation, original protection, release inventory. Local test artifacts: $test"

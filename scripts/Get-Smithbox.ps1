@@ -1,6 +1,7 @@
 param([string]$Destination)
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
+. (Join-Path $PSScriptRoot 'Download.ps1')
 if(-not $Destination){
  $root=if((Split-Path $PSScriptRoot -Leaf) -eq 'scripts'){Split-Path $PSScriptRoot}else{$PSScriptRoot}
  $Destination=Join-Path $root 'vendor\smithbox'
@@ -17,9 +18,11 @@ try {
  [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
  $zip=Join-Path $temp 'smithbox.zip'
  Write-Output 'Downloading official Smithbox 2.2.6 (about 283 MiB)...'
- Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
+ Invoke-DownloadWithProgress -Uri $url -OutFile $zip -Label 'Smithbox 2.2.6'
+ Write-Host 'Verifying SHA-256...'
  if((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash -ne $expected){throw 'SHA-256 mismatch. Download was not installed.'}
  $extract=Join-Path $temp 'extracted'
+ Write-Host 'Extracting archive, please wait...'
  Expand-Archive -LiteralPath $zip -DestinationPath $extract
  $candidate=@(Get-ChildItem -LiteralPath $extract -Filter 'Andre.SoulsFormats.dll' -File -Recurse)
  if($candidate.Count -ne 1){throw 'Unexpected Smithbox archive layout.'}
