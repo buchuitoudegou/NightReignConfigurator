@@ -11,13 +11,13 @@ if($LASTEXITCODE -ne 0){throw 'Configurator compilation failed.'}
 & $csc /nologo /target:winexe /platform:x64 /optimize+ "/out:$out\Host-Pattern-Controller.exe" @refs "$root\src\HostPatternController.cs"
 if($LASTEXITCODE -ne 0){throw 'Controller compilation failed.'}
 foreach($name in 'Generate.ps1','Setup.ps1','Launch.ps1','Get-Smithbox.ps1','Bootstrap.ps1','dependencies.json','一键配置.cmd','启动游戏.cmd'){Copy-Item -LiteralPath "$root\scripts\$name" -Destination $out -Force}
-foreach($name in 'README.md','THIRD_PARTY.md','CHANGELOG.md','快速开始.txt'){Copy-Item -LiteralPath "$root\$name" -Destination $out -Force}
+foreach($name in 'README.md','DETAILS.md','THIRD_PARTY.md','CHANGELOG.md','快速开始.txt'){Copy-Item -LiteralPath "$root\$name" -Destination $out -Force}
 if($BundleSmithbox){
  & "$root\scripts\Bundle-Smithbox.ps1" -Source $BundleSmithbox -Destination (Join-Path $out 'vendor\smithbox')
 }
 if($Package){
  # Explicit allowlist: never recurse over a working installation containing user data.
- $names=@('Nightreign-Configurator.exe','Host-Pattern-Controller.exe','Generate.ps1','Setup.ps1','Launch.ps1','Get-Smithbox.ps1','Bootstrap.ps1','dependencies.json','一键配置.cmd','启动游戏.cmd','README.md','THIRD_PARTY.md','CHANGELOG.md','快速开始.txt')
+ $names=@('Nightreign-Configurator.exe','Host-Pattern-Controller.exe','Generate.ps1','Setup.ps1','Launch.ps1','Get-Smithbox.ps1','Bootstrap.ps1','dependencies.json','一键配置.cmd','启动游戏.cmd','README.md','DETAILS.md','THIRD_PARTY.md','CHANGELOG.md','快速开始.txt')
  $zip=Join-Path $root 'dist\Nightreign-Configurator-preview.zip'
  Compress-Archive -LiteralPath @($names | ForEach-Object {Join-Path $out $_}) -DestinationPath $zip -Force
  Copy-Item -LiteralPath $zip -Destination (Join-Path $root 'dist\Nightreign-Configurator-v0.1.0-preview-win-x64.zip') -Force
