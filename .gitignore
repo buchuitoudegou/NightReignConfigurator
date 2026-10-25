@@ -1,0 +1,16 @@
+dist/
+vendor/
+data/
+**/data/
+*.bin
+*.dll
+*.exe
+*.ini
+*.zip
+*.backup-*
+config.json
+host-selection.json
+setup-request.json
+*.jsonl
+*.user
+*.tmp
